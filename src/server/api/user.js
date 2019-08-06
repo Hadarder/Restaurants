@@ -122,7 +122,7 @@ module.exports = (app) => {
         res.sendStatus(200);
     });
 
-    app.post('/api/updateUser/:username', function (req, res) {
+app.post('/api/updateUser/:username', function (req, res) {
         const username = req.params.username;
         const {newUsername, newLocation} = req.body;
         User.findOneAndUpdate({'username': {'$regex': '^' + username + '$', $options: 'i'}},
@@ -135,16 +135,25 @@ module.exports = (app) => {
                 if (err)
                     console.error(err);
                 else {
-                    const payload = {username: newUsername};
-                    const token = jwt.sign(payload, secret, {});
-                    res.cookie('token', token, {httpOnly: true})
-                        .sendStatus(200);
+                    Review.updateMany({'username': {'$regex': '^' + username + '$', $options: 'i'}},
+                        {
+                            $set: {
+                                username: newUsername
+                            }
+                        }, function (err, doc) {
+                            if (err)
+                                console.error(err);
+                            else {
+                                const payload = {username: newUsername};
+                                const token = jwt.sign(payload, secret, {});
+                                res.cookie('token', token, {httpOnly: true})
+                                    .sendStatus(200);
+                            }
+                        });
                 }
             });
 
-
-    });
-
+    
     app.get('/api/searchUsers', function (req, res) {
         const {username, fullName, location} = req.query;
         User.find(
