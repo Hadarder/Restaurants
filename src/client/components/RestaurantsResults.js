@@ -52,6 +52,8 @@ const styles = {
     },
     select: {
         margin: '30px 0 0 35px',
+        overflow: 'visible',
+        zIndex: 2
     },
     title: {
         position: 'relative',
@@ -147,8 +149,8 @@ class restaurantResults extends React.Component {
         this.props.searchRestaurantsRequest(this.state.name, this.state.location, this.state.type, this.state.score);
     };
 
-    componentWillMount= () => {
-        if (this.props.loggedIn){
+    componentDidUpdate = () => {
+        if (this.props.loggedIn && this.props.location === "") {
             this.props.userDetailsRequest(this.props.username);
         }
     };
