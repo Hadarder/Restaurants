@@ -152,7 +152,7 @@ app.post('/api/updateUser/:username', function (req, res) {
                         });
                 }
             });
-
+   });
     
     app.get('/api/searchUsers', function (req, res) {
         const {username, fullName, location} = req.query;
